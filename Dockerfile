@@ -1,5 +1,5 @@
 # Build stage
-FROM python:3.11-slim as builder
+FROM python:3.13-slim AS builder
 
 # Install uv
 RUN pip install --no-cache-dir uv
@@ -12,14 +12,10 @@ COPY pyproject.toml uv.lock* ./
 
 # Create virtual environment and install dependencies with uv
 RUN uv venv /opt/venv && \
-    /opt/venv/bin/uv pip install -e .
+    uv pip install --python /opt/venv/bin/python -e .
 
 # Runtime stage
-FROM python:3.11-slim
-
-# Install runtime dependencies (if needed for any packages)
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
+FROM python:3.13-slim
 
 # Copy virtual environment from builder
 COPY --from=builder /opt/venv /opt/venv
