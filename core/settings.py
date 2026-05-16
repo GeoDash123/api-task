@@ -1,13 +1,19 @@
 
+import os
 from pathlib import Path
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-^op=^0e()1))3@2e4m%@4*l5g&o*k42$5gpob5$7-715245&0!'
+SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-^op=^0e()1))3@2e4m%@4*l5g&o*k42$5gpob5$7-715245&0!')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
 
 
 # Application definition
@@ -59,9 +65,13 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    "default": {
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.getenv('DB_NAME', 'tasks'),
+        "USER": os.getenv('DB_USER', 'postgres'),
+        "PASSWORD": os.getenv('DB_PASSWORD', 'postgres'),
+        "HOST": os.getenv('DB_HOST', 'db'),
+        "PORT": os.getenv('DB_PORT', '5432'),
     }
 }
 
