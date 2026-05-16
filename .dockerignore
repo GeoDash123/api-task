@@ -1,0 +1,15 @@
+.git
+.gitignore
+.python-version
+.venv
+__pycache__
+*.pyc
+*.pyo
+*.egg-info
+dist
+build
+.DS_Store
+db.sqlite3
+.env
+.env.local
+*.md
