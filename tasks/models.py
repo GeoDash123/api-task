@@ -15,6 +15,7 @@ class Task(models.Model):
     owner = models.ForeignKey(
         "auth.User", related_name="tasks", on_delete=models.CASCADE
     )
-    
+
+
     class Meta:
         ordering = ["created"]
