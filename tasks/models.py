@@ -16,6 +16,5 @@ class Task(models.Model):
         "auth.User", related_name="tasks", on_delete=models.CASCADE
     )
 
-
     class Meta:
         ordering = ["created"]
