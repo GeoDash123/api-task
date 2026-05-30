@@ -1,6 +1,7 @@
 from django.contrib.auth.models import Group, User
-
 from rest_framework import permissions, viewsets
+
+from tasks.models import Task
 
 from tasks.models import Task
 from tasks.serializers import (
@@ -37,4 +38,3 @@ class TaskViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
-        
