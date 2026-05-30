@@ -1,6 +1,9 @@
 from django.contrib.auth.models import Group, User
+
 from rest_framework import permissions, viewsets
+
 from tasks.models import Task
+
 from tasks.serializers import GroupSerializer, TaskSerializer, UserSerializer
 
 
