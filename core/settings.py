@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import environ
 
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -13,8 +14,10 @@ SECRET_KEY = os.getenv('SECRET_KEY', 'django-insecure-^op=^0e()1))3@2e4m%@4*l5g&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', 'localhost,127.0.0.1').split(',')
-
+ALLOWED_HOSTS = os.getenv(
+    'ALLOWED_HOSTS',
+    'localhost,127.0.0.1,host.docker.internal'
+).split(',')
 
 # Application definition
 
@@ -28,9 +31,11 @@ INSTALLED_APPS = [
     'rest_framework',
     'tasks',
     "corsheaders",
+    'django_prometheus',
 ]
 
 MIDDLEWARE = [
+    'django_prometheus.middleware.PrometheusBeforeMiddleware',
     "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -39,6 +44,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_prometheus.middleware.PrometheusAfterMiddleware',
 ]
 
 ROOT_URLCONF = 'core.urls'
@@ -66,12 +72,12 @@ WSGI_APPLICATION = 'core.wsgi.application'
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv('DB_NAME', 'tasks'),
-        "USER": os.getenv('DB_USER', 'postgres'),
-        "PASSWORD": os.getenv('DB_PASSWORD', 'postgres'),
-        "HOST": os.getenv('DB_HOST', 'db'),
-        "PORT": os.getenv('DB_PORT', '5432'),
+        "ENGINE": "django_prometheus.db.backends.postgresql",
+        "NAME": "tasks",
+        "USER": "postgres",
+        "PASSWORD": "postgres",
+        "HOST": "localhost",
+        "PORT": "5432",
     }
 }
 
@@ -120,3 +126,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:9000",
 ]
+
+if 'django_prometheus' not in INSTALLED_APPS:
+    INSTALLED_APPS += ['django_prometheus']
+
+if 'django_prometheus.middleware.PrometheusAfterMiddleware' not in MIDDLEWARE:
+    MIDDLEWARE.insert(0, 'django_prometheus.middleware.PrometheusBeforeMiddleware')
+
+if 'django_prometheus.middleware.PrometheusAfterMiddleware' not in MIDDLEWARE:
+    MIDDLEWARE.append('django_prometheus.middleware.PrometheusAfterMiddleware')
