@@ -1,6 +1,5 @@
 from django.contrib.auth.models import Group, User
 from rest_framework import serializers
-
 from tasks.models import Task
 
 
@@ -17,6 +16,7 @@ class GroupSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Group
         fields = ["url", "name"]
+
 
 class TaskSerializer(serializers.HyperlinkedModelSerializer):
     owner = serializers.ReadOnlyField(source="owner.username")
