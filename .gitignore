@@ -10,3 +10,10 @@ wheels/
 .venv
 
 *.sqlite3
+
+.env
+.env.*
+*.env
+key.txt
+*.key
+*.pem
